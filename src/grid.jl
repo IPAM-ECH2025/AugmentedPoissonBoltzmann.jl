@@ -1,6 +1,7 @@
 module Grid
-
-using ExtendableGrids
+using ExtendableGrids: ExtendableGrids, Coordinates, ExtendableGrid, bfacemask!,
+    dim_grid, geomspace, glue, num_bfaces, num_cells,
+    num_nodes, simplexgrid
 
 Base.@kwdef struct GeometricGrid
     domain_size::AbstractFloat

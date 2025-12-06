@@ -11,10 +11,12 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Markdown = "d6f4376e-aef5-505a-96c1-9c027394607a"
 PreallocationTools = "d236fae5-4411-538c-8e31-a6e3d9e00b46"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
+SciMLPublic = "431bcebd-1456-4ced-9d72-93c2757fff0b"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 VoronoiFVM = "82b139dc-5afc-11e9-35da-9b9bdfd336f3"
 
 [compat]
+ExplicitImports = "1.14.0"
 ExtendableGrids = "1.14.0"
 InteractiveUtils = "1.10.0"
 LessUnitful = "1.2.1"
@@ -22,12 +24,15 @@ LinearAlgebra = "1.10.0"
 Markdown = "1.10.0"
 PreallocationTools = "0.4.34"
 SciMLBase = "2.127.0"
+SciMLPublic = "1.0.0"
 Unitful = "1.25.1"
 VoronoiFVM = "2.13.0"
 julia = "1.10"
 
 [extras]
+ExplicitImports = "7d51a73a-1435-4ff3-83d9-f097790105c7"
+Markdown = "d6f4376e-aef5-505a-96c1-9c027394607a"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["Test", "ExplicitImports", "Markdown"]

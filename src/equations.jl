@@ -1,8 +1,9 @@
 module Equations
 
-using VoronoiFVM
-using ExtendableGrids
-using PreallocationTools
+using ExtendableGrids: ExtendableGrids, ExtendableGrid
+using PreallocationTools: PreallocationTools, DiffCache, get_tmp
+using VoronoiFVM: VoronoiFVM, boundary_dirichlet!, boundary_neumann!,
+    edgelength, nodevolumes, solve
 
 using ..Parameters
 using ..Units

@@ -7,6 +7,12 @@ Development initiated during the [IPAM Long Program - Bridging the Gap: Transiti
 """
 module AugmentedPoissonBoltzmann
 
+using ExtendableGrids: ExtendableGrids, bfacemask!
+using LessUnitful: LessUnitful, @ufac_str
+using VoronoiFVM: VoronoiFVM, solve, unknowns
+using LessUnitful: LessUnitful, @ufac_str
+
+
 include("units.jl")
 using .Units
 
@@ -23,21 +29,30 @@ include("equations.jl")
 using .Equations
 
 
-module ICMPBP
-    using LessUnitful
-    using ExtendableGrids
-    using VoronoiFVM
-    using LinearAlgebra
-    using SciMLBase
+module SolverCore
+    using ExtendableGrids: ExtendableGrids, BFaceNodes, Coordinates, num_nodes
+    using InteractiveUtils: InteractiveUtils
+    using LessUnitful: LessUnitful, @ph_str, @ufac_str
+    using Markdown: Markdown, @md_str
+    using SciMLBase: SciMLBase, solve, solve!
+    using SciMLPublic: @public
+    using VoronoiFVM: VoronoiFVM, boundary_dirichlet!, boundary_neumann!,
+        enable_boundary_species!, enable_species!, nodevolumes,
+        unknown_indices, unknowns
 
     include("pramp.jl")
-    include("icmbp-p.jl")
+    include("solvercore.jl")
     include("cells.jl")
+    export pramp
+    export set_molarity!, set_κ!, set_q!, set_φ
+    export calc_cmol, calc_c0mol, calc_χ
+    export get_E, get_φ, get_p, get_c0
+    export ICMPBData, SurfaceChargedSymmetricCell, AppliedPotentialHalfCell
+    @public W, Λ
 end
 
-include("api.jl")
+include("pyapi.jl")
 
-export pramp
 export mpbpsolve
 export icmpbpsolve
 end

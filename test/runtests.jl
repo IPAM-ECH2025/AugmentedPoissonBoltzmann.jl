@@ -1,5 +1,10 @@
 using AugmentedPoissonBoltzmann
 using Test: @testset, @test
+using ExplicitImports, Markdown
+
+@testset "ExplicitImports" begin
+    @test ExplicitImports.check_no_implicit_imports(AugmentedPoissonBoltzmann, skip = [Base, Core, Markdown, AugmentedPoissonBoltzmann]) === nothing
+end
 
 @testset "AugmentedPoissonBoltzmann" begin
     @testset "Units" begin
