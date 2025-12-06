@@ -1,3 +1,3 @@
-a```@docs
+```@docs
 AugmentedPoissonBoltzmann
 ```
