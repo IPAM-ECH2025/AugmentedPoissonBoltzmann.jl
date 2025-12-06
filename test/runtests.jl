@@ -1,20 +1,20 @@
-using JuliaMPBSolver
+using AugmentedPoissonBoltzmann
 using Test: @testset, @test
 
-@testset "JuliaMPBSolver" begin
+@testset "AugmentedPoissonBoltzmann" begin
     @testset "Units" begin
-        @test JuliaMPBSolver.Units.RT(0) == 0
+        @test AugmentedPoissonBoltzmann.Units.RT(0) == 0
     end
     @testset "Grids" begin
-        grid = JuliaMPBSolver.Grid.create_full_cell(
-            JuliaMPBSolver.Grid.GeometricGrid(10.0f0, 0, 1.0f0, 1.0f0, false),
+        grid = AugmentedPoissonBoltzmann.Grid.create_full_cell(
+            AugmentedPoissonBoltzmann.Grid.GeometricGrid(10.0f0, 0, 1.0f0, 1.0f0, false),
         )
-        @test JuliaMPBSolver.Grid.is_equivalent(grid, 1, 11, 10, 3)
+        @test AugmentedPoissonBoltzmann.Grid.is_equivalent(grid, 1, 11, 10, 3)
 
-        grid = JuliaMPBSolver.Grid.create_half_cell(
-            JuliaMPBSolver.Grid.GeometricGrid(10.0f0, 0, 1.0f0, 1.0f0, false),
+        grid = AugmentedPoissonBoltzmann.Grid.create_half_cell(
+            AugmentedPoissonBoltzmann.Grid.GeometricGrid(10.0f0, 0, 1.0f0, 1.0f0, false),
         )
-        @test JuliaMPBSolver.Grid.is_equivalent(grid, 1, 11, 10, 2)
+        @test AugmentedPoissonBoltzmann.Grid.is_equivalent(grid, 1, 11, 10, 2)
     end
     @testset "mpbsolve" begin
         X, C0, CP, CM = mpbpsolve(n = 5)

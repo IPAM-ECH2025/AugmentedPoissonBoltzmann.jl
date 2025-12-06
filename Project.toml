@@ -1,7 +1,7 @@
-name = "JuliaMPBSolver"
-uuid = "d8b18f01-5396-498d-b34d-247825c18ff0"
-version = "0.3.2"
-authors = ["Jürgen Fuhrmann <juergen-fuhrmann@web.de>"]
+name = "AugmentedPoissonBoltzmann"
+uuid = "d8b18f01-5396-498d-b34d-247825c18ff1"
+version = "0.4"
+authors = ["Jürgen Fuhrmann <juergen-fuhrmann@web.de>, Jason Landini <landinjm@umich.edu>"]
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"

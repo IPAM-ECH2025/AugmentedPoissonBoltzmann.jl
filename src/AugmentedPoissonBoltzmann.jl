@@ -1,4 +1,4 @@
-module JuliaMPBSolver
+module AugmentedPoissonBoltzmann
 
 include("units.jl")
 using .Units
