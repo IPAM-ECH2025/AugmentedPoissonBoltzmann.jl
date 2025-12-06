@@ -1,6 +1,6 @@
 name = "AugmentedPoissonBoltzmann"
 uuid = "d8b18f01-5396-498d-b34d-247825c18ff1"
-version = "0.4"
+version = "0.4.1"
 authors = ["Jürgen Fuhrmann <juergen-fuhrmann@web.de>, Jason Landini <landinjm@umich.edu>"]
 
 [deps]
