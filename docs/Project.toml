@@ -1,0 +1,6 @@
+[deps]
+AugmentedPoissonBoltzmann = "d8b18f01-5396-498d-b34d-247825c18ff1"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+
+[sources]
+AugmentedPoissonBoltzmann = {rev = "main", url = ".."}

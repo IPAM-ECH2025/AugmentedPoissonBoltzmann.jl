@@ -1,0 +1,3 @@
+a```@docs
+AugmentedPoissonBoltzmann
+```
