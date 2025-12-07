@@ -60,7 +60,7 @@ Half-cell configuration with surface charge boundary condition.
 - `sys::VoronoiFVM.System`: The finite volume system containing the discretization and physics
 
 This cell type is used for simulations where the electrode surface charge is specified
-rather than the potential (galvanostatic-like conditions).
+rather than the potential.
 """
 struct SurfaceChargedHalfCell <: AbstractHalfCell
     sys::VoronoiFVM.System
@@ -124,7 +124,7 @@ function VoronoiFVM.unknowns(cell::AbstractAugmentedPBCell)
 end
 
 """
-    abpdata(cell::AbstractAugmentedPBCell)
+    apbdata(cell::AbstractAugmentedPBCell)
 
 Extract the AugmentedPBData structure from a cell.
 
@@ -190,7 +190,7 @@ Extract electric field strength from the solution.
 # Returns
 - Vector of electric field strengths in V/m (one value per node)
 """
-get_E(sol, cell::AbstractAugmentedPBCell) = sol[abpdata(cell).iE, :] * abpdata(cell).Escale
+get_E(sol, cell::AbstractAugmentedPBCell) = sol[apbdata(cell).iE, :] * apbdata(cell).Escale
 
 """
     get_φ(sol, cell::AbstractAugmentedPBCell)
@@ -204,7 +204,7 @@ Extract electric potential from the solution.
 # Returns
 - Vector of electric potentials in V (one value per node)
 """
-get_φ(sol, cell::AbstractAugmentedPBCell) = sol[abpdata(cell).iφ, :]
+get_φ(sol, cell::AbstractAugmentedPBCell) = sol[apbdata(cell).iφ, :]
 
 """
     get_p(sol, cell::AbstractAugmentedPBCell)
@@ -218,21 +218,8 @@ Extract pressure from the solution.
 # Returns
 - Vector of pressures in Pa (one value per node)
 """
-get_p(sol, cell::AbstractAugmentedPBCell) = sol[abpdata(cell).ip, :] * abpdata(cell).pscale
+get_p(sol, cell::AbstractAugmentedPBCell) = sol[apbdata(cell).ip, :] * apbdata(cell).pscale
 
-"""
-    get_c0(sol, cell::AbstractAugmentedPBCell)
-
-Extract solvent mole fraction from the solution.
-
-# Arguments
-- `sol`: Solution vector from the solver
-- `cell::AbstractAugmentedPBCell`: The cell configuration
-
-# Returns
-- Vector of solvent mole fractions (dimensionless, one value per node)
-"""
-get_c0(sol, cell::AbstractAugmentedPBCell) = sol[abpdata(cell).i0, :]
 
 """
     set_κ!(cell::AbstractAugmentedPBCell, κ::Number)
@@ -245,7 +232,7 @@ Set the ion solvation number for all ionic species.
 
 This sets the same solvation number for all ions in the system.
 """
-set_κ!(cell::AbstractAugmentedPBCell, κ::Number) = abpdata(cell).κ = [κ, κ]
+set_κ!(cell::AbstractAugmentedPBCell, κ::Number) = apbdata(cell).κ = [κ, κ]
 
 """
     set_molarity!(cell::AbstractAugmentedPBCell, M)
@@ -258,7 +245,7 @@ Set the bulk electrolyte molarity.
 
 Updates the bulk ion concentrations and related parameters in the cell data.
 """
-set_molarity!(cell::AbstractAugmentedPBCell, M) = set_molarity!(abpdata(cell), M)
+set_molarity!(cell::AbstractAugmentedPBCell, M) = set_molarity!(apbdata(cell), M)
 
 """
     set_φ!(cell::AbstractAugmentedPBCell, φ::Number)
@@ -271,7 +258,7 @@ Set the applied electrode potential.
 
 Relevant for applied potential boundary conditions.
 """
-set_φ!(cell::AbstractAugmentedPBCell, φ::Number) = abpdata(cell).φ = φ
+set_φ!(cell::AbstractAugmentedPBCell, φ::Number) = apbdata(cell).φ = φ
 
 """
     set_q!(cell::AbstractAugmentedPBCell, q::Number)
@@ -285,7 +272,7 @@ Set the surface charge at the electrodes.
 Sets symmetric charges: +q at one electrode and -q at the other.
 Relevant for surface charge boundary conditions.
 """
-set_q!(cell::AbstractAugmentedPBCell, q::Number) = abpdata(cell).q .= [q, -q]
+set_q!(cell::AbstractAugmentedPBCell, q::Number) = apbdata(cell).q .= [q, -q]
 
 """
     SciMLBase.solve(cell::AbstractAugmentedPBCell; inival=unknowns(cell), verbose="", damp_initial=0.1, kwargs...)
@@ -511,11 +498,10 @@ Create a symmetric cell with surface charge boundary conditions and ion conserva
 - `SurfaceChargedSymmetricCell`: Cell object ready for solving
 
 # Features
-- Ion conservation is enabled
-- Sparse matrix storage for efficiency in ion-conserving systems
-- Symmetric configuration with identical electrodes
-- Suitable for galvanostatic-like simulations
 - Boundary conditions: specified surface charges at both electrodes
+- Ion conservation is enabled
+- Sparse matrix storage  of solution in ion-conserving systems
+- Symmetric configuration with identical electrodes
 
 # Grid Requirements
 The grid must have three boundary regions:

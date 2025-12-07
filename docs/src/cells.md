@@ -1,6 +1,6 @@
 # Electrochemical cells
 
-## Electrochemical cells
+## Cell Types
 
 ### Abstract Types
 ```@docs
@@ -38,9 +38,9 @@ AugmentedPoissonBoltzmann.SolverCore.apbdata
 
 ### Calculation Functions
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.calc_cmol(::Any, ::AbstractAugmentedPBCell)
-AugmentedPoissonBoltzmann.SolverCore.calc_c0mol(::Any, ::AbstractAugmentedPBCell)
-AugmentedPoissonBoltzmann.SolverCore.calc_χ(::Any, ::AbstractAugmentedPBCell)
+AugmentedPoissonBoltzmann.SolverCore.calc_cmol(sol, cell::AbstractAugmentedPBCell)
+AugmentedPoissonBoltzmann.SolverCore.calc_c0mol(sol, cell::AbstractAugmentedPBCell)
+AugmentedPoissonBoltzmann.SolverCore.calc_χ(sol, cell::AbstractAugmentedPBCell)
 ```
 
 ### Getter Functions
@@ -48,7 +48,6 @@ AugmentedPoissonBoltzmann.SolverCore.calc_χ(::Any, ::AbstractAugmentedPBCell)
 AugmentedPoissonBoltzmann.SolverCore.get_E
 AugmentedPoissonBoltzmann.SolverCore.get_φ
 AugmentedPoissonBoltzmann.SolverCore.get_p
-AugmentedPoissonBoltzmann.SolverCore.get_c0
 ```
 
 ### Setter Functions
