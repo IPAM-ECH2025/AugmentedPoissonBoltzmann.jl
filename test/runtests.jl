@@ -1,5 +1,12 @@
 using AugmentedPoissonBoltzmann
+using AugmentedPoissonBoltzmann.SolverCore
 using Test: @testset, @test
+using LessUnitful
+using ExplicitImports
+
+@testset "ExplicitImports" begin
+    @test ExplicitImports.check_no_implicit_imports(AugmentedPoissonBoltzmann) === nothing
+end
 
 @testset "AugmentedPoissonBoltzmann" begin
     @testset "Units" begin
@@ -16,6 +23,34 @@ using Test: @testset, @test
         )
         @test AugmentedPoissonBoltzmann.Grid.is_equivalent(grid, 1, 11, 10, 2)
     end
+    @testset "solvercore" begin
+        let
+            data = AugmentedPBData()
+            set_molarity!(data, 0.01)
+            data.χ = 78.49 - 1
+            cdl0 = SolverCore.dlcap0(data)
+            @test cdl0 ≈ 22.84669184882525ufac"μF/cm^2"
+            # Check with Bard/Faulkner: the value must be $(22.8)μF/cm^2")
+        end
+        let
+            data = AugmentedPBData()
+            set_molarity!(data, 0.01)
+            ddata = SolverCore.DerivedData(data)
+            sumyz = 0.0
+            sumyv = ddata.y0_E * data.v0
+            sumy = ddata.y0_E
+            for α in 1:data.N
+                v = (1.0 + data.κ[α]) * data.v0
+                sumyz += ddata.y_E[α] * data.z[α]
+                sumyv += ddata.y_E[α] * v
+                sumy += ddata.y_E[α]
+            end
+            @test sumy ≈ 1.0
+        end
+
+    end
+
+
     @testset "mpbsolve" begin
         X, C0, CP, CM = mpbpsolve(n = 5)
 

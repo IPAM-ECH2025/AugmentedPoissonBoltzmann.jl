@@ -1,6 +1,7 @@
 module Units
 
-using LessUnitful, Unitful
+using LessUnitful: LessUnitful, @ph_str, @ufac_str
+using Unitful: Unitful
 
 #
 # A little forward about LessUnitful.jl. If you decide to look up
