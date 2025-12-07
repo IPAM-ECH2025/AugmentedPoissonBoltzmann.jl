@@ -3,6 +3,8 @@
 
 Data structure containing data for equilibrium calculations.
 All data including molarity in SI basic units
+
+$(TYPEDFIELDS)
 """
 Base.@kwdef mutable struct AugmentedPBData
 
@@ -125,12 +127,13 @@ end
 
 """
     apply_voltage!(data, v)
+
+Set working electrode voltage
 """
 function apply_voltage!(data::AugmentedPBData, φ)
     data.φ = φ
     return data
 end
-
 
 """
   set_molarity!(data,M)
@@ -147,7 +150,7 @@ end
 
 
 """
-   debyelength(data)
+       L_Debye(data)
 
 ```math
 L_{Debye}=\\sqrt{ \\frac{(1+χ)ε_0k_BT}{e^2n_E}}
@@ -177,8 +180,24 @@ end;
 """
     struct DerivedData
 
-Calculate bulk mole fractions from incompressibiltiy:
+Struct holding some derived data
 
+$(TYPEDFIELDS)
+"""
+struct DerivedData{T}
+    "Effective ion volumes"
+    v::Vector{Float64}
+    "Bulk ion mole fractions"
+    y_E::Vector{T}
+    "Bulk solvent mole fraction"
+    y0_E::T
+end
+
+
+"""
+    DerivedData(augmentedpbdata, n_E)
+
+Calculate bulk mole fractions from incompressibiltiy:
 
 ```math
 \\begin{aligned}
@@ -193,17 +212,7 @@ y_α^E&=\\frac{n_α^E}{n^E}
 \\end{aligned}
 ```
 
-
 """
-struct DerivedData{T}
-    "Effective ion volumes"
-    v::Vector{Float64}
-    "Bulk ion mole fractions"
-    y_E::Vector{T}
-    "Bulk solvent mole fraction"
-    y0_E::T
-end
-
 function DerivedData(data::AugmentedPBData, n_E)
     (; κ, v0, vu, T) = data
     c0 = zero(eltype(n_E)) + 1 / v0
@@ -220,6 +229,11 @@ function DerivedData(data::AugmentedPBData, n_E)
     return DerivedData(v, y_E, y0_E)
 end
 
+"""
+    DerivedData(augmentedpbdata)
+
+Calculate bulk mole fractions from incompressibiltiy
+"""
 function DerivedData(data::AugmentedPBData)
     return DerivedData(data, data.n_E)
 end

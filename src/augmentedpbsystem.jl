@@ -14,7 +14,7 @@ function reaction!(f, u, node, data)
     # Everything dependent on u is on the left side of the equation, therefore the minus sign
     f[data.iφ] = -spacecharge(u, data) * data.qscale
     return
-end;
+end
 
 
 # This possibility to handle the pressure has been introduced in
@@ -257,6 +257,11 @@ function calc_cnum(sol, sys)
 end;
 
 
+"""
+     calc_c0num(sol,sys)
+
+Obtain solvent number density from system
+"""
 function calc_c0num(sol, sys)
     data = sys.physics.data
     grid = sys.grid
@@ -282,6 +287,13 @@ end;
 Obtain ion  molarities (molar densities in mol/L)  from system
 """
 calc_cmol(sol, sys) = calc_cnum(sol, sys) / (ph"N_A" * ufac"mol/dm^3");
+
+
+"""
+     calc_c0mol(sol,sys)
+
+Obtain solvent  molarity (molar density in mol/L)  from system
+"""
 calc_c0mol(sol, sys) = calc_c0num(sol, sys) / (ph"N_A" * ufac"mol/dm^3");
 
 """
@@ -301,7 +313,9 @@ function calc_χ(sol, sys)
     return χ
 end
 
-
+"""
+    calc_spacecharge(sys, sol)
+"""
 function calc_spacecharge(sys, sol)
     data = sys.physics.data
     return VoronoiFVM.integrate(sys, (y, u, node, data) -> y[data.iφ] = -spacecharge(u, data), sol)[data.iφ, 1]
@@ -310,7 +324,7 @@ end
 """
      ysum(sys,sol)
 """
-function ysum(sys, sol)
+function ysum(sys::VoronoiFVM.System, sol)
     data = sys.physics.data
     n = size(sol, 2)
     sumy = zeros(n)

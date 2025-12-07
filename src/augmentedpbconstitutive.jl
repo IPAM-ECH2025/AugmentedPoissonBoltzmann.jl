@@ -26,7 +26,7 @@ function W(x)
 end
 
 """
-   Λ(x)
+     Λ(x)
 
 ``\\Lambda(x)=\\ln\\left( \\frac{\\sinh(x)}x  \\right)``
 This is the antiderivative of the Langevin function ``\\mathcal L(x)``.
@@ -107,6 +107,8 @@ end
 
 """
     susceptibility(u, data)
+
+Susceptibility model
 """
 function susceptibility(u, data)
     (; iE, i0, Escale) = data
@@ -145,6 +147,11 @@ function c_num!(c, y, data, ddata)
     return c ./= sumyv
 end;
 
+"""
+    c0_num(c,φ,p, data)
+
+Calculate number concentration of solvent at discretization node
+"""
 function c0_num(y, data, ddata)
     (; i0) = data
 

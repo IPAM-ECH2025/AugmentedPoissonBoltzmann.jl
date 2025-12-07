@@ -2,10 +2,10 @@ using AugmentedPoissonBoltzmann
 using AugmentedPoissonBoltzmann.SolverCore
 using Test: @testset, @test
 using LessUnitful
-using ExplicitImports, Markdown
+using ExplicitImports
 
 @testset "ExplicitImports" begin
-    @test ExplicitImports.check_no_implicit_imports(AugmentedPoissonBoltzmann, skip = [Base, Core, Markdown, AugmentedPoissonBoltzmann]) === nothing
+    @test ExplicitImports.check_no_implicit_imports(AugmentedPoissonBoltzmann) === nothing
 end
 
 @testset "AugmentedPoissonBoltzmann" begin

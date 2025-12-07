@@ -1,9 +1,8 @@
-using Documenter, AugmentedPoissonBoltzmann
-
+using Documenter, AugmentedPoissonBoltzmann, AugmentedPoissonBoltzmann.SolverCore, VoronoiFVM
 function mkdocs()
     makedocs(
         sitename = "AugmentedPoissonBoltzmann.jl",
-        modules = [AugmentedPoissonBoltzmann],
+        modules = [AugmentedPoissonBoltzmann, AugmentedPoissonBoltzmann.SolverCore],
         clean = false,
         doctest = false,
         warnonly = true,
@@ -11,6 +10,8 @@ function mkdocs()
         repo = "https://github.com/IPAM-ECH2025/AugmentedPoissonBoltzmann.jl",
         pages = [
             "Home" => "index.md",
+            "API for Python" => "pyapi.md",
+            "SolverCore API" => "solvercore.md",
         ]
     )
     return if !isinteractive()
