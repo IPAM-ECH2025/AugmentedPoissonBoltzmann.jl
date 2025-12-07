@@ -41,7 +41,9 @@ module SolverCore
         unknown_indices, unknowns
 
     include("pramp.jl")
-    include("solvercore.jl")
+    include("augmentedpbdata.jl")
+    include("augmentedpbconstitutive.jl")
+    include("augmentedpbsystem.jl")
     include("cells.jl")
     export pramp
     export set_molarity!, set_κ!, set_q!, set_φ
