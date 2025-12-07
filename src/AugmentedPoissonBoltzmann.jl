@@ -47,7 +47,7 @@ module SolverCore
     export set_molarity!, set_κ!, set_q!, set_φ
     export calc_cmol, calc_c0mol, calc_χ
     export get_E, get_φ, get_p, get_c0
-    export ICMPBData, SurfaceChargedSymmetricCell, AppliedPotentialHalfCell
+    export AugmentedPBData, SurfaceChargedSymmetricCell, AppliedPotentialHalfCell
     @public W, Λ
 end
 

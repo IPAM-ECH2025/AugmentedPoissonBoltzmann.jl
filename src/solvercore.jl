@@ -62,18 +62,18 @@ makeδ(v, χ, T) = sqrt(v * χ * 3 * ph"ε_0" * ph"k_B" * T)
 
 # ╔═╡ 6e4aaa60-29c5-4f75-a3f1-24e340c25e6c
 md"""
-#### `struct ICMPBData`
+#### `struct AugmentedPBData`
 """
 
 # ╔═╡ 0d825f88-cd67-4368-90b3-29f316b72e6e
 begin
     """
-        ICMPBData
+        AugmentedPBData
 
     Data structure containing data for equilibrium calculations.
     All data including molarity in SI basic units
     """
-    Base.@kwdef mutable struct ICMPBData
+    Base.@kwdef mutable struct AugmentedPBData
 
         "Ion charge numbers."
         z::Vector{Int} = [-1, 1]
@@ -178,7 +178,7 @@ begin
 end
 
 # ╔═╡ 0089bc79-cc71-45b6-985b-932db659df98
-ICMPBData()
+AugmentedPBData()
 
 # ╔═╡ 858ed8e1-84b1-4105-8ea0-45209aea40c6
 md"""
@@ -186,12 +186,12 @@ md"""
 """
 
 # ╔═╡ 4929c105-4c01-4c83-ad2f-2056a8c51d29
-function apply_charge!(data::ICMPBData, q::Vector)
+function apply_charge!(data::AugmentedPBData, q::Vector)
     data.q = q
     return data
 end
 
-function apply_charge!(data::ICMPBData, q::Number)
+function apply_charge!(data::AugmentedPBData, q::Number)
     data.q = [-q, q]
     return data
 end
@@ -202,7 +202,7 @@ md"""
 """
 
 # ╔═╡ acc60604-bcc5-4ecf-9772-e2fc851a9232
-function apply_voltage!(data::ICMPBData, φ)
+function apply_voltage!(data::AugmentedPBData, φ)
     data.φ = φ
     return data
 end
@@ -218,7 +218,7 @@ Set the molarity of the electrolyte and update depending data
 """
 
 # ╔═╡ 5d6340c4-2ddd-429b-a60b-3de5570a7398
-function set_molarity!(data::ICMPBData, M_E)
+function set_molarity!(data::AugmentedPBData, M_E)
     n_E = M_E * ph"N_A" / ufac"dm^3"
     data.molarity = n_E
     data.n_E = fill(n_E, data.N)
@@ -253,7 +253,7 @@ C_{dl,0}=\sqrt{\frac{2(1+χ) ε_0e^2 n_E}{k_BT}}
 """
 
 # ╔═╡ 1d22b09e-99c1-4026-9505-07bdffc98582
-function dlcap0(data::ICMPBData)
+function dlcap0(data::AugmentedPBData)
     return sqrt(
         2 * (1 + data.χ0) * ph"ε_0" * ph"e"^2 * data.n_E[1] / (ph"k_B" * data.T),
     )
@@ -263,7 +263,7 @@ end;
 # ╠═╡ skip_as_script = true
 #=╠═╡
 let
-    data=ICMPBData()
+    data=AugmentedPBData()
     set_molarity!(data,0.01)
     data.χ=78.49-1
     cdl0=dlcap0(data)
@@ -477,7 +477,7 @@ begin
         y0_E::T
     end
 
-    function DerivedData(data::ICMPBData, n_E)
+    function DerivedData(data::AugmentedPBData, n_E)
         (; κ, v0, vu, T) = data
         c0 = zero(eltype(n_E)) + 1 / v0
         barc = zero(eltype(n_E))
@@ -493,7 +493,7 @@ begin
         return DerivedData(v, y_E, y0_E)
     end
 
-    function DerivedData(data::ICMPBData)
+    function DerivedData(data::AugmentedPBData)
         return DerivedData(data, data.n_E)
     end
 
@@ -501,7 +501,7 @@ end
 
 # ╔═╡ b1e333c0-cdaa-4242-b71d-b54ff71aef83
 let
-    data = ICMPBData()
+    data = AugmentedPBData()
     set_molarity!(data, 0.01)
     ddata = DerivedData(data)
     sumyz = 0.0
@@ -781,7 +781,7 @@ This method runs over the full grid, and its sparsity pattern is automatically d
 
 # ╔═╡ 2b779474-fe3b-4367-8553-3851341d719b
 md"""
-#### ICMPBSystem(grid, data)
+#### AugmentedPBSystem(grid, data)
 
 Create MPB system with pressure. Ion conserving if `data.conserveions==true`. In that case, the solution is a sparse matrix.
 """
@@ -793,7 +793,7 @@ Initialize and return unknown vector.
 """
 
 # ╔═╡ b0a45e53-8b98-4e18-8b41-7f6d0bc1f76e
-function VoronoiFVM.unknowns(sys, data::ICMPBData)
+function VoronoiFVM.unknowns(sys, data::AugmentedPBData)
     (; i0, iφ, ip, iE, coffset, N) = data
     u = unknowns(sys, inival = 0)
     i3 = sys.grid[BFaceNodes][3][1]
@@ -882,7 +882,7 @@ function ionconservation!(f, u, sys, data)
 end
 
 # ╔═╡ 7bf3a130-3b47-428e-916f-4a0ec1237844
-function ICMPBSystem(grid, data; valuetype = Float64)
+function AugmentedPBSystem(grid, data; valuetype = Float64)
 
     data.nv = ones(num_nodes(grid)) # trigger sparsity detector
     sys = VoronoiFVM.System(

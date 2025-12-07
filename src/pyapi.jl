@@ -73,9 +73,9 @@ function mpbpsolve(;
     )
 
     X, grid = prepare_grid(n, domain)
-    data = SolverCore.ICMPBData(; z = chargenumbers, q = surfacecharge)
+    data = SolverCore.AugmentedPBData(; z = chargenumbers, q = surfacecharge)
     SolverCore.set_molarity!(data, bulkmolarity)
-    sys = SolverCore.ICMPBSystem(grid, data)
+    sys = SolverCore.AugmentedPBSystem(grid, data)
     sol = solve(sys; inival = 0.01, damp_initial = 0.05, verbose = "n")
     c0 = SolverCore.calc_c0mol(sol, sys)
     c = SolverCore.calc_cmol(sol, sys)
@@ -126,7 +126,7 @@ X, c0, c_anion, c_cation = icmpbpsolve(
 
 # Notes
 - The function enforces an odd number of grid points for numerical stability
-- Ion conservation is enforced through the `conserveions=true` parameter in ICMPBData
+- Ion conservation is enforced through the `conserveions=true` parameter in AugmentedPBData
 - The solver employs damped Newton iteration with initial damping factor of 0.05
 - Average molarity represents the spatial average concentration, which may differ from bulk concentration due to ion conservation
 - Surface charges should be specified in SI units (C/m²)
@@ -147,9 +147,9 @@ function icmpbpsolve(;
     )
 
     X, grid = prepare_grid(n, domain)
-    data = SolverCore.ICMPBData(; z = chargenumbers, q = surfacecharge, conserveions = true)
+    data = SolverCore.AugmentedPBData(; z = chargenumbers, q = surfacecharge, conserveions = true)
     SolverCore.set_molarity!(data, averagemolarity)
-    sys = SolverCore.ICMPBSystem(grid, data)
+    sys = SolverCore.AugmentedPBSystem(grid, data)
     sol = solve(sys; inival = unknowns(sys, data), damp_initial = 0.05, verbose = "n")
     c0 = SolverCore.calc_c0mol(sol, sys)
     c = SolverCore.calc_cmol(sol, sys)
