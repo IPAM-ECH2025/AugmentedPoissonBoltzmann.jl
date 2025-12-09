@@ -132,12 +132,15 @@ function ionconservation!(f, u, sys, data)
         end
 
         # Calculate electric field strength
-        if i == 1
+        if i <= num_nodes(sys.grid) / 2
             f[idx[iE, i]] = u[idx[iE, i]] - (u[idx[iφ, i + 1]] - u[idx[iφ, i]]) / (X[i + 1] - X[i]) / Escale
-        elseif i == num_nodes(sys.grid)
-            f[idx[iE, i]] = u[idx[iE, i]] - (u[idx[iφ, i - 1]] - u[idx[iφ, i]]) / (X[i - 1] - X[i]) / Escale
         else
-            f[idx[iE, i]] = u[idx[iE, i]] - (u[idx[iφ, i + 1]] - u[idx[iφ, i - 1]]) / (X[i + 1] - X[i - 1]) / Escale
+            num_nodes(sys.grid)
+            f[idx[iE, i]] = u[idx[iE, i]] - (u[idx[iφ, i - 1]] - u[idx[iφ, i]]) / (X[i - 1] - X[i]) / Escale
+            # else
+            #     f[idx[iE, i]] = u[idx[iE, i]]
+            #     f[idx[iE, i]] -= 0.5 * (u[idx[iφ, i + 1]] - u[idx[iφ, i]]) / (X[i + 1] - X[i]) / Escale
+            #     f[idx[iE, i]] -= 0.5 * (u[idx[iφ, i - 1]] - u[idx[iφ, i]]) / (X[i - 1] - X[i]) / Escale
         end
     end
 
