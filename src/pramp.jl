@@ -11,8 +11,8 @@
     )
 
 Run 'f(p)'  successively with parameter values from the range given by 'p'.
-Stepsize is given by `h`. If `f` doesn't trow an errror, `h` is increased by the factor of 
-`hgrow` unless it exceeds `hmax`, and the next step is performed with the new value.
+Stepsize is given by `h`. If `f` doesn't throw an error, `h` is increased by the factor of 
+`hgrow` unless it exceeds `hmax`,  and the next step is performed with the new value.
 
 If `f(p)` throws an error, solution is retried with a lower value of `h=h*hdegrow`.
 In this case, if `p==p[begin]` or `h<hmin`, the error is rethrown.
