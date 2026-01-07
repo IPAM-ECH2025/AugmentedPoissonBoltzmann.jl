@@ -10,7 +10,7 @@
 - Use one-sided  "upwinded" gradient evolution
 
 Up to now, electric field was evaluated by averaged gradients in the
-inner of the domain and by one-sided gradients at the boundries.
+inner of the domain and by one-sided gradients at the boundaries.
 This inconsistency led to some mesh size dependent and thus unphysical
 concentration jumps in the first and last grid cells.
 
