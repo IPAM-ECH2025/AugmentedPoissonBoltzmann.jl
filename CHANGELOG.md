@@ -1,6 +1,8 @@
 # Changelog
+## [1.0.1] - 2026-01-07
+- Allow for VoronoiFVM v3, PreallocationTools v1
 
-## [1.0] - 2025-12-09
+## [1.0.0] - 2025-12-09
 
 ### Features
 
