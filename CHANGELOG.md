@@ -1,6 +1,8 @@
 # Changelog
+## [1.0.1] - 2026-01-07
+- Allow for VoronoiFVM v3, PreallocationTools v1
 
-## [1.0] - 2025-12-09
+## [1.0.0] - 2025-12-09
 
 ### Features
 
@@ -8,7 +10,7 @@
 - Use one-sided  "upwinded" gradient evolution
 
 Up to now, electric field was evaluated by averaged gradients in the
-inner of the domain and by one-sided gradients at the boundries.
+inner of the domain and by one-sided gradients at the boundaries.
 This inconsistency led to some mesh size dependent and thus unphysical
 concentration jumps in the first and last grid cells.
 
