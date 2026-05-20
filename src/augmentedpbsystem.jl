@@ -339,7 +339,7 @@ end
 
 
 """
-#### qsweep(sys)
+     qsweep(sys)
 
 Sweep over series of surface charges and calculate resulting potential
 difference.

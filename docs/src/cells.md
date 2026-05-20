@@ -4,68 +4,69 @@
 
 ### Abstract Types
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.AbstractAugmentedPBCell
-AugmentedPoissonBoltzmann.SolverCore.AbstractHalfCell
-AugmentedPoissonBoltzmann.SolverCore.AbstractSymmetricCell
+AbstractMPBCell
+AbstractHalfCell
+AbstractSymmetricCell
 ```
 
 ### Concrete Cell Types
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.AppliedPotentialHalfCell
-AugmentedPoissonBoltzmann.SolverCore.AppliedPotentialSymmetricCell
-AugmentedPoissonBoltzmann.SolverCore.SurfaceChargedHalfCell
-AugmentedPoissonBoltzmann.SolverCore.SurfaceChargedSymmetricCell
+AppliedPotentialHalfCell
+AppliedPotentialSymmetricCell
+SurfaceChargedHalfCell
+SurfaceChargedSymmetricCell
 ```
 
 ## Cell Constructors
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.AppliedPotentialHalfCell(grid, data; dielectric_decrement=false, valuetype=Float64)
-AugmentedPoissonBoltzmann.SolverCore.SurfaceChargedSymmetricCell(grid, data; dielectric_decrement=false, valuetype=Float64)
+AppliedPotentialHalfCell(grid, data; dielectric_decrement=false, valuetype=Float64)
+SurfaceChargedSymmetricCell(grid, data; dielectric_decrement=false, valuetype=Float64)
 ```
 
 ## Solving and Initialization
 ```@docs
-VoronoiFVM.unknowns(cell::AbstractAugmentedPBCell)
-SciMLBase.solve(cell::AbstractAugmentedPBCell; inival=unknowns(cell), verbose="", damp_initial=0.1, kwargs...)
+VoronoiFVM.unknowns(cell::AbstractMPBCell)
+SciMLBase.solve(cell::AbstractMPBCell; inival=unknowns(cell), verbose="", damp_initial=0.1, kwargs...)
 ```
 
 ## Helper Functions
 
 ### Data Access
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.apbdata
+mpbdata
 ```
 
 ### Calculation Functions
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.calc_cmol(sol, cell::AbstractAugmentedPBCell)
-AugmentedPoissonBoltzmann.SolverCore.calc_c0mol(sol, cell::AbstractAugmentedPBCell)
-AugmentedPoissonBoltzmann.SolverCore.calc_χ(sol, cell::AbstractAugmentedPBCell)
+calc_cmol(sol, cell::AbstractMPBCell)
+calc_c0mol(sol, cell::AbstractMPBCell)
+calc_χ(sol, cell::AbstractMPBCell)
 ```
 
 ### Getter Functions
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.get_E
-AugmentedPoissonBoltzmann.SolverCore.get_φ
-AugmentedPoissonBoltzmann.SolverCore.get_p
+get_E
+get_φ
+get_p
+get_c0
 ```
 
 ### Setter Functions
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.set_κ!
-AugmentedPoissonBoltzmann.SolverCore.set_molarity!(cell::AbstractAugmentedPBCell, M)
-AugmentedPoissonBoltzmann.SolverCore.set_φ!
-AugmentedPoissonBoltzmann.SolverCore.set_q!
+set_κ!
+set_molarity!(cell::AbstractMPBCell, M)
+set_φ!
+set_q!
 ```
 
 ## Analysis Functions
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.dlcapsweep
+dlcapsweep
 ```
 
 ## Boundary Conditions (Internal)
 ```@docs
-AugmentedPoissonBoltzmann.SolverCore.halfcell_applied_potential_bcondition!
-AugmentedPoissonBoltzmann.SolverCore.symmcell_surfacecharge_bcondition!
+halfcell_applied_potential_bcondition!
+symmcell_surfacecharge_bcondition!
 ```
 

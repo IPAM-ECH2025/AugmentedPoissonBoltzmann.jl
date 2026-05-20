@@ -1,24 +1,24 @@
 """
-    AbstractAugmentedPBCell
+    AbstractMPBCell
 
 Abstract base type for all modified Poisson-Boltzmann cell types.
 Provides a common interface for different cell configurations.
 """
-abstract type AbstractAugmentedPBCell end
+abstract type AbstractMPBCell end
 
 """
-    AbstractHalfCell <: AbstractAugmentedPBCell
+    AbstractHalfCell <: AbstractMPBCell
 
 Abstract type for half-cell configurations where only one electrode is modeled.
 """
-abstract type AbstractHalfCell <: AbstractAugmentedPBCell end
+abstract type AbstractHalfCell <: AbstractMPBCell end
 
 """
-    AbstractSymmetricCell <: AbstractAugmentedPBCell
+    AbstractSymmetricCell <: AbstractMPBCell
 
 Abstract type for symmetric cell configurations with two identical electrodes.
 """
-abstract type AbstractSymmetricCell <: AbstractAugmentedPBCell end
+abstract type AbstractSymmetricCell <: AbstractMPBCell end
 
 """
     AppliedPotentialHalfCell <: AbstractHalfCell
@@ -37,7 +37,7 @@ struct AppliedPotentialHalfCell <: AbstractHalfCell
 end
 
 """
-    AppliedPotentialSymmetricCell <: AbstractAugmentedPBCell
+    AppliedPotentialSymmetricCell <: AbstractMPBCell
 
 Symmetric cell configuration with applied potential.
 
@@ -47,7 +47,7 @@ Symmetric cell configuration with applied potential.
 This cell type represents a symmetric configuration where both electrodes are identical
 and a potential is applied across them.
 """
-struct AppliedPotentialSymmetricCell <: AbstractAugmentedPBCell
+struct AppliedPotentialSymmetricCell <: AbstractMPBCell
     sys::VoronoiFVM.System
 end
 
@@ -60,7 +60,7 @@ Half-cell configuration with surface charge boundary condition.
 - `sys::VoronoiFVM.System`: The finite volume system containing the discretization and physics
 
 This cell type is used for simulations where the electrode surface charge is specified
-rather than the potential.
+rather than the potential (galvanostatic-like conditions).
 """
 struct SurfaceChargedHalfCell <: AbstractHalfCell
     sys::VoronoiFVM.System
@@ -82,12 +82,12 @@ struct SurfaceChargedSymmetricCell <: AbstractSymmetricCell
 end
 
 """
-    VoronoiFVM.unknowns(cell::AbstractAugmentedPBCell)
+    VoronoiFVM.unknowns(cell::AbstractMPBCell)
 
 Initialize and return the unknown vector for a given cell.
 
 # Arguments
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 
 # Returns
 - Initial unknown vector with appropriate structure and values
@@ -103,7 +103,7 @@ The unknowns include:
 Initial values are set to reasonable defaults (mole fractions ≈ 0.1 for ions,
 adjusted for solvent to maintain sum = 1).
 """
-function VoronoiFVM.unknowns(cell::AbstractAugmentedPBCell)
+function VoronoiFVM.unknowns(cell::AbstractMPBCell)
     sys = cell.sys
     data = sys.physics.data
     (; i0, iφ, ip, iE, coffset, N) = data
@@ -124,163 +124,176 @@ function VoronoiFVM.unknowns(cell::AbstractAugmentedPBCell)
 end
 
 """
-    apbdata(cell::AbstractAugmentedPBCell)
+    mpbdata(cell::AbstractMPBCell)
 
 Extract the AugmentedPBData structure from a cell.
 
 # Arguments
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 
 # Returns
 - `AugmentedPBData`: The data structure containing physical parameters
 """
-apbdata(cell::AbstractAugmentedPBCell) = cell.sys.physics.data
+mpbdata(cell::AbstractMPBCell) = cell.sys.physics.data
 
 """
-    calc_cmol(sol, cell::AbstractAugmentedPBCell)
+    calc_cmol(sol, cell::AbstractMPBCell)
 
 Calculate ion concentrations in mol/L from the solution.
 
 # Arguments
 - `sol`: Solution vector from the solver
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 
 # Returns
 - Matrix of ion concentrations in mol/L (one row per species, one column per node)
 """
-calc_cmol(sol, cell::AbstractAugmentedPBCell) = calc_cmol(sol, cell.sys)
+calc_cmol(sol, cell::AbstractMPBCell) = calc_cmol(sol, cell.sys)
 
 """
-    calc_c0mol(sol, cell::AbstractAugmentedPBCell)
+    calc_c0mol(sol, cell::AbstractMPBCell)
 
 Calculate solvent concentration in mol/L from the solution.
 
 # Arguments
 - `sol`: Solution vector from the solver
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 
 # Returns
 - Vector of solvent concentrations in mol/L (one value per node)
 """
-calc_c0mol(sol, cell::AbstractAugmentedPBCell) = calc_c0mol(sol, cell.sys)
+calc_c0mol(sol, cell::AbstractMPBCell) = calc_c0mol(sol, cell.sys)
 
 """
-    calc_χ(sol, cell::AbstractAugmentedPBCell)
+    calc_χ(sol, cell::AbstractMPBCell)
 
 Calculate electric susceptibility from the solution.
 
 # Arguments
 - `sol`: Solution vector from the solver
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 
 # Returns
 - Vector of susceptibility values (one value per node)
 """
-calc_χ(sol, cell::AbstractAugmentedPBCell) = calc_χ(sol, cell.sys)
+calc_χ(sol, cell::AbstractMPBCell) = calc_χ(sol, cell.sys)
 
 """
-    get_E(sol, cell::AbstractAugmentedPBCell)
+    get_E(sol, cell::AbstractMPBCell)
 
 Extract electric field strength from the solution.
 
 # Arguments
 - `sol`: Solution vector from the solver
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 
 # Returns
 - Vector of electric field strengths in V/m (one value per node)
 """
-get_E(sol, cell::AbstractAugmentedPBCell) = sol[apbdata(cell).iE, :] * apbdata(cell).Escale
+get_E(sol, cell::AbstractMPBCell) = sol[mpbdata(cell).iE, :] * mpbdata(cell).Escale
 
 """
-    get_φ(sol, cell::AbstractAugmentedPBCell)
+    get_φ(sol, cell::AbstractMPBCell)
 
 Extract electric potential from the solution.
 
 # Arguments
 - `sol`: Solution vector from the solver
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 
 # Returns
 - Vector of electric potentials in V (one value per node)
 """
-get_φ(sol, cell::AbstractAugmentedPBCell) = sol[apbdata(cell).iφ, :]
+get_φ(sol, cell::AbstractMPBCell) = sol[mpbdata(cell).iφ, :]
 
 """
-    get_p(sol, cell::AbstractAugmentedPBCell)
+    get_p(sol, cell::AbstractMPBCell)
 
 Extract pressure from the solution.
 
 # Arguments
 - `sol`: Solution vector from the solver
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 
 # Returns
 - Vector of pressures in Pa (one value per node)
 """
-get_p(sol, cell::AbstractAugmentedPBCell) = sol[apbdata(cell).ip, :] * apbdata(cell).pscale
-
+get_p(sol, cell::AbstractMPBCell) = sol[mpbdata(cell).ip, :] * mpbdata(cell).pscale
 
 """
-    set_κ!(cell::AbstractAugmentedPBCell, κ::Number)
+    get_c0(sol, cell::AbstractMPBCell)
+
+Extract solvent mole fraction from the solution.
+
+# Arguments
+- `sol`: Solution vector from the solver
+- `cell::AbstractMPBCell`: The cell configuration
+
+# Returns
+- Vector of solvent mole fractions (dimensionless, one value per node)
+"""
+get_c0(sol, cell::AbstractMPBCell) = sol[mpbdata(cell).i0, :]
+
+"""
+    set_κ!(cell::AbstractMPBCell, κ::Number)
 
 Set the ion solvation number for all ionic species.
 
 # Arguments
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 - `κ::Number`: Solvation number (number of solvent molecules per ion)
 
 This sets the same solvation number for all ions in the system.
 """
-set_κ!(cell::AbstractAugmentedPBCell, κ::Number) = apbdata(cell).κ = [κ, κ]
+set_κ!(cell::AbstractMPBCell, κ::Number) = mpbdata(cell).κ = [κ, κ]
 
 """
-    set_molarity!(cell::AbstractAugmentedPBCell, M)
+    set_molarity!(cell::AbstractMPBCell, M)
 
 Set the bulk electrolyte molarity.
 
 # Arguments
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 - `M`: Molarity in mol/L
 
 Updates the bulk ion concentrations and related parameters in the cell data.
 """
-set_molarity!(cell::AbstractAugmentedPBCell, M) = set_molarity!(apbdata(cell), M)
+set_molarity!(cell::AbstractMPBCell, M) = set_molarity!(mpbdata(cell), M)
 
 """
-    set_φ!(cell::AbstractAugmentedPBCell, φ::Number)
+    set_φ!(cell::AbstractMPBCell, φ::Number)
 
 Set the applied electrode potential.
 
 # Arguments
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 - `φ::Number`: Applied potential in V
 
 Relevant for applied potential boundary conditions.
 """
-set_φ!(cell::AbstractAugmentedPBCell, φ::Number) = apbdata(cell).φ = φ
+set_φ!(cell::AbstractMPBCell, φ::Number) = mpbdata(cell).φ = φ
 
 """
-    set_q!(cell::AbstractAugmentedPBCell, q::Number)
+    set_q!(cell::AbstractMPBCell, q::Number)
 
 Set the surface charge at the electrodes.
 
 # Arguments
-- `cell::AbstractAugmentedPBCell`: The cell configuration
+- `cell::AbstractMPBCell`: The cell configuration
 - `q::Number`: Surface charge density in C/m²
 
 Sets symmetric charges: +q at one electrode and -q at the other.
 Relevant for surface charge boundary conditions.
 """
-set_q!(cell::AbstractAugmentedPBCell, q::Number) = apbdata(cell).q .= [q, -q]
+set_q!(cell::AbstractMPBCell, q::Number) = mpbdata(cell).q .= [q, -q]
 
 """
-    SciMLBase.solve(cell::AbstractAugmentedPBCell; inival=unknowns(cell), verbose="", damp_initial=0.1, kwargs...)
+    SciMLBase.solve(cell::AbstractMPBCell; inival=unknowns(cell), verbose="", damp_initial=0.1, kwargs...)
 
 Solve the modified Poisson-Boltzmann system for the given cell configuration.
 
 # Arguments
-- `cell::AbstractAugmentedPBCell`: The cell configuration to solve
+- `cell::AbstractMPBCell`: The cell configuration to solve
 
 # Keyword Arguments
 - `inival`: Initial values for the unknowns (default: `unknowns(cell)`)
@@ -293,7 +306,7 @@ Solve the modified Poisson-Boltzmann system for the given cell configuration.
 
 Uses a damped Newton method to solve the nonlinear system of equations.
 """
-function SciMLBase.solve(cell::AbstractAugmentedPBCell; inival = unknowns(cell), verbose = "", damp_initial = 0.1, kwargs...)
+function SciMLBase.solve(cell::AbstractMPBCell; inival = unknowns(cell), verbose = "", damp_initial = 0.1, kwargs...)
     sys = cell.sys
     return solve(sys; inival, damp_initial, verbose, kwargs...)
 end
