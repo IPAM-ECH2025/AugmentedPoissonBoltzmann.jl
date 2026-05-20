@@ -44,12 +44,15 @@ module SolverCore
     include("augmentedpbsystem.jl")
     include("cells.jl")
     export pramp
-    export set_molarity!, set_κ!, set_q!, set_φ
+    export set_molarity!, set_κ!, set_q!, set_φ!
+    export halfcell_applied_potential_bcondition!, symmcell_surfacecharge_bcondition!
     @public L_debye, dlcap0
     export calc_cmol, calc_c0mol, calc_χ
-    export get_E, get_φ, get_p
-    export AbstractAugmentedPBCell, AbstractHalfCell, AbstractSymmetricCell
-    export AugmentedPBData, SurfaceChargedSymmetricCell, AppliedPotentialHalfCell
+    export get_E, get_φ, get_p, get_c0
+    export AbstractMPBCell, AbstractHalfCell, AbstractSymmetricCell
+    export AugmentedPBData, SurfaceChargedHalfCell, SurfaceChargedSymmetricCell, AppliedPotentialHalfCell, AppliedPotentialSymmetricCell
+    export mpbdata
+    export dlcapsweep
     @public W, Λ
 end
 
